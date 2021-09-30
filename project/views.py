@@ -1,4 +1,4 @@
-""" File with routes for receiving statistic"""
+""" File with routes for statistic"""
 from rest_framework import status
 from rest_framework.decorators import api_view
 from project.serializers import StatisticSerializerPost as Ssp, StatisticSerializer as Ss
@@ -12,7 +12,7 @@ def get_statistic(request):
     """ Method for obtaining statistic """
     if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
         return CustomResponse(result="INVALID_SECURE_KEY")
-    date_from, date_to = request.data.get('from'), request.data.get('to')
+    date_from, date_to = request.query_params.get('from'), request.query_params.get('to')
     if date_from and date_to:
         validate_date_from, validate_date_to = Ssp(data={'date': date_from}), Ssp(data={'date': date_to})
         validate_date_from.is_valid(raise_exception=True)
@@ -24,7 +24,8 @@ def get_statistic(request):
     serializer = Ss(qs, many=True)
     if serializer.data:
 
-        sort_by_field = request.data.get('sort_by_field') if request.data.get('sort_by_field') else 'date'
+        sort_by_field = request.query_params.get('sort_by_field') if request.query_params.get(
+            'sort_by_field') else 'date'
         try:
             serializer_data = sorted(
                 serializer.data, key=lambda k: k[sort_by_field], reverse=True)
