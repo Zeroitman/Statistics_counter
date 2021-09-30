@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@zggie_(o%71+k3v^9ncuxc!t^4qn-^^fox3m=sd_o9az!_1kz'
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', True)
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -50,11 +50,11 @@ WSGI_APPLICATION = 'source.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'project_db',
-        'USER': 'project_db_user',
-        'PASSWORD': '12qwaszx',
-        'HOST': '127.0.0.1',
-        'PORT': '5432'
+        'NAME': os.environ.get('DB_NAME', 'project_db'),
+        'USER': os.environ.get('DB_USER', 'project_db_user'),
+        'PASSWORD': os.environ.get('DB_PASS', '12qwaszx'),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', '5432')
     }
 }
 AUTH_PASSWORD_VALIDATORS = [
@@ -76,4 +76,5 @@ LANGUAGE_CODE = 'ru-RU'
 TIME_ZONE = 'UTC'
 USE_I18N, USE_L10N, USE_TZ = True, True, True
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
